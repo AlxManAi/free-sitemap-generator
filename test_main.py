@@ -1,3 +1,8 @@
+"""Unit tests for the Free Sitemap Generator crawler functionality.
+
+Tests the Crawler class in isolation with mocked PyQt6 and HTTP requests.
+"""
+
 import sys
 import unittest
 from unittest.mock import patch, Mock
@@ -72,7 +77,7 @@ class TestCrawler(unittest.TestCase):
         }
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Not Found by Mock", 404, url=url))
 
-        crawler = Crawler("http://example.com", max_depth=2)
+        crawler = Crawler("http://example.com", max_depth=2, crawl_delay=0)
         sitemap = crawler.get_sitemap()
         
         expected_urls = {
@@ -98,9 +103,9 @@ class TestCrawler(unittest.TestCase):
         }
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Not Found by Mock", 404, url=url))
 
-        crawler = Crawler("http://example.com", max_depth=1)
+        crawler = Crawler("http://example.com", max_depth=1, crawl_delay=0)
         sitemap = crawler.get_sitemap()
-        
+
         expected_urls = {"http://example.com", "http://example.com/page1"}
         self.assertEqual(set(sitemap), expected_urls)
         
@@ -128,17 +133,17 @@ class TestCrawler(unittest.TestCase):
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Not Found by Mock", 404, url=url))
 
         # Max depth 0: only base_url
-        crawler0 = Crawler("http://example.com", max_depth=0)
+        crawler0 = Crawler("http://example.com", max_depth=0, crawl_delay=0)
         sitemap0 = crawler0.get_sitemap()
         self.assertEqual(set(sitemap0), {"http://example.com"})
 
         # Max depth 1: base_url and its direct links
-        crawler1 = Crawler("http://example.com", max_depth=1)
+        crawler1 = Crawler("http://example.com", max_depth=1, crawl_delay=0)
         sitemap1 = crawler1.get_sitemap()
         self.assertEqual(set(sitemap1), {"http://example.com", "http://example.com/depth1"})
 
         # Max depth 2: base_url, its links, and links from those pages
-        crawler2 = Crawler("http://example.com", max_depth=2)
+        crawler2 = Crawler("http://example.com", max_depth=2, crawl_delay=0)
         sitemap2 = crawler2.get_sitemap()
         self.assertEqual(set(sitemap2), {"http://example.com", "http://example.com/depth1", "http://example.com/depth2"})
         
@@ -168,7 +173,7 @@ class TestCrawler(unittest.TestCase):
         mock_get.reset_mock() # Reset calls from crawler0 and crawler1
 
         # Re-run for crawler2 to get its specific calls
-        crawler2_rerun = Crawler("http://example.com", max_depth=2)
+        crawler2_rerun = Crawler("http://example.com", max_depth=2, crawl_delay=0)
         # The mock_responses and side_effect are already set for the whole test method.
         sitemap2_rerun = crawler2_rerun.get_sitemap() 
         self.assertEqual(set(sitemap2_rerun), {"http://example.com", "http://example.com/depth1", "http://example.com/depth2"})
@@ -195,7 +200,7 @@ class TestCrawler(unittest.TestCase):
         # so 'page#section' and 'page?param=1' become 'page'.
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Not Found by Mock for " + url, 404, url=url))
         
-        crawler = Crawler("http://example.com/page", max_depth=1)
+        crawler = Crawler("http://example.com/page", max_depth=1, crawl_delay=0)
         sitemap = crawler.get_sitemap()
 
         # The sitemap should contain the URL as it was found (before normalization for sitemap addition)
@@ -217,7 +222,7 @@ class TestCrawler(unittest.TestCase):
         }
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses_refined.get(url, self._create_mock_response("Not Found: " + url, 404, url=url))
 
-        crawler_norm = Crawler("http://example.com/page", max_depth=1)
+        crawler_norm = Crawler("http://example.com/page", max_depth=1, crawl_delay=0)
         sitemap_norm = crawler_norm.get_sitemap()
         
         # URLs added to sitemap are the ones successfully crawled.
@@ -244,7 +249,7 @@ class TestCrawler(unittest.TestCase):
         # Get all unique URLs passed to mock_get by crawler_norm
         # Similar to test_depth_limit, reset mock if checking specific calls for crawler_norm
         mock_get.reset_mock()
-        crawler_norm_rerun = Crawler("http://example.com/page", max_depth=1)
+        crawler_norm_rerun = Crawler("http://example.com/page", max_depth=1, crawl_delay=0)
         # mock_get.side_effect is already set to mock_responses_refined
         sitemap_norm_rerun = crawler_norm_rerun.get_sitemap()
         self.assertEqual(set(sitemap_norm_rerun), expected_urls_norm) # Verify sitemap is still correct
@@ -281,9 +286,9 @@ class TestCrawler(unittest.TestCase):
         }
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Not Found by Mock", 404, url=url))
 
-        crawler = Crawler("http://example.com", max_depth=1)
+        crawler = Crawler("http://example.com", max_depth=1, crawl_delay=0)
         sitemap = crawler.get_sitemap()
-        
+
         expected_urls = {"http://example.com", "http://example.com/page.html"}
         self.assertEqual(set(sitemap), expected_urls)
         
@@ -295,8 +300,8 @@ class TestCrawler(unittest.TestCase):
 
 
     @patch('main.requests.get')
-    @patch('builtins.print') # To suppress print statements from crawler for cleaner test output
-    def test_http_error_handling_for_single_url(self, mock_print, mock_get):
+    @patch('main.logger') # Patch logger instead of print
+    def test_http_error_handling_for_single_url(self, mock_logger, mock_get):
         mock_responses = {
             "http://example.com": self._create_mock_response('<html><a href="/goodpage">Good Page</a><a href="/brokenpage">Broken Page</a><a href="/anothergood">Another Good</a></html>', url="http://example.com"),
             "http://example.com/goodpage": self._create_mock_response('<html>Good content</html>', url="http://example.com/goodpage"),
@@ -305,21 +310,20 @@ class TestCrawler(unittest.TestCase):
         }
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Default Mock 404", 404, url=url))
 
-        crawler = Crawler("http://example.com", max_depth=1)
+        crawler = Crawler("http://example.com", max_depth=1, crawl_delay=0)
         sitemap = crawler.get_sitemap()
-        
+
         expected_urls = {"http://example.com", "http://example.com/goodpage", "http://example.com/anothergood"}
         self.assertEqual(set(sitemap), expected_urls)
-        
-        # Verify error was "printed" (mock_print was called) for the broken page
-        # Example: check if print was called with a message containing "404" and "brokenpage"
-        error_print_called = False
-        for call in mock_print.call_args_list:
+
+        # Verify error was logged (mock_logger.warning was called) for the broken page
+        error_logged = False
+        for call in mock_logger.warning.call_args_list:
             args, _ = call
-            if args and "404" in args[0] and "brokenpage" in args[0]:
-                error_print_called = True
+            if args and "404" in str(args[0]) and "brokenpage" in str(args[0]):
+                error_logged = True
                 break
-        self.assertTrue(error_print_called, "Error message for 404 page was not printed.")
+        self.assertTrue(error_logged, "Error message for 404 page was not logged.")
 
 
     @patch('main.requests.get')
@@ -345,7 +349,7 @@ class TestCrawler(unittest.TestCase):
         }
         mock_get.side_effect = lambda url, timeout=None, headers=None: mock_responses.get(url, self._create_mock_response("Not Found by Mock: " + url, 404, url=url))
 
-        crawler = Crawler(base_url, max_depth=1)
+        crawler = Crawler(base_url, max_depth=1, crawl_delay=0)
         sitemap = crawler.get_sitemap()
 
         expected_urls = {

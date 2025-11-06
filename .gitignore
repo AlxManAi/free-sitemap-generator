@@ -135,6 +135,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Ruff
+.ruff_cache/
+
 # IDE
 .vscode/
 .idea/
@@ -145,3 +148,7 @@ cython_debug/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local development
+*.log
+.python-version
