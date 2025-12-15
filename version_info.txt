@@ -29,11 +29,11 @@ StringFileInfo(
   [
   StringTable(
     u'040904B0',
-    [StringStruct(u'CompanyName', u'JTGSYSTEMS'),
+    [StringStruct(u'CompanyName', u'ALXSYSTEMS'),
     StringStruct(u'FileDescription', u'ALX Sitemap Generator'),
     StringStruct(u'FileVersion', u'2.0.0.0'),
     StringStruct(u'InternalName', u'ALXSitemapGenerator'),
-    StringStruct(u'LegalCopyright', u'Copyright (C) 2024 JTGSYSTEMS'),
+    StringStruct(u'LegalCopyright', u'Copyright (C) 2025 ALXSYSTEMS'),
     StringStruct(u'OriginalFilename', u'ALXSitemapGenerator.exe'),
     StringStruct(u'ProductName', u'ALX Sitemap Generator'),
     StringStruct(u'ProductVersion', u'2.0.0.0')])

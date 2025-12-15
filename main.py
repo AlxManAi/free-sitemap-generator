@@ -863,7 +863,7 @@ def main() -> int:
     app = QApplication(sys.argv)
     app.setApplicationName("ALX Sitemap Generator")
     app.setApplicationVersion("2.0")
-    app.setOrganizationName("JTGSYSTEMS")
+    app.setOrganizationName("ALXSYSTEMS")
 
     # Set application icon if available
     # In PyInstaller bundle, look for icon in sys._MEIPASS first
