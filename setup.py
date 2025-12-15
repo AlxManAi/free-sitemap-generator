@@ -12,17 +12,17 @@ def check_and_install_pyinstaller():
     """Check if PyInstaller is installed, install if not."""
     try:
         import PyInstaller
-        print("✓ PyInstaller is installed")
+        print("[OK] PyInstaller is installed")
         return True
     except ImportError:
-        print("⚠ PyInstaller is not installed. Installing...")
+        print("[!] PyInstaller is not installed. Installing...")
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"], 
                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print("✓ PyInstaller installed successfully")
+            print("[OK] PyInstaller installed successfully")
             return True
         except Exception as e:
-            print(f"✗ Failed to install PyInstaller: {e}")
+            print(f"[ERROR] Failed to install PyInstaller: {e}")
             print("Please install manually: pip install pyinstaller")
             return False
 
@@ -46,9 +46,9 @@ def build_executable():
     icon_arg = []
     if os.path.exists(icon_path):
         icon_arg = [f"--icon={icon_path}"]
-        print(f"✓ Using icon: {icon_path}")
+        print(f"[OK] Using icon: {icon_path}")
     else:
-        print(f"⚠ Warning: Icon not found at {icon_path}, building without icon")
+        print(f"[!] Warning: Icon not found at {icon_path}, building without icon")
 
     # Check if theme file exists
     theme_path = "dark_theme.qss"
@@ -59,7 +59,7 @@ def build_executable():
             theme_data_arg = [f"--add-data={theme_path};."]
         else:
             theme_data_arg = [f"--add-data={theme_path}:."]
-        print(f"✓ Including theme file: {theme_path}")
+        print(f"[OK] Including theme file: {theme_path}")
 
     # Build PyInstaller command with all necessary options
     pyinstaller_command = [
@@ -108,7 +108,7 @@ def build_executable():
         process = subprocess.run(pyinstaller_command, check=True)
         
         print("\n" + "=" * 70)
-        print("✓ BUILD SUCCESSFUL")
+        print("[OK] BUILD SUCCESSFUL")
         print("=" * 70)
         
         # Determine the executable extension based on the OS
@@ -119,11 +119,11 @@ def build_executable():
         if os.path.exists(executable_path):
             file_size = os.path.getsize(executable_path)
             file_size_mb = file_size / (1024 * 1024)
-            print(f"✓ Executable created: {executable_path}")
-            print(f"✓ File size: {file_size_mb:.2f} MB ({file_size:,} bytes)")
+            print(f"[OK] Executable created: {executable_path}")
+            print(f"[OK] File size: {file_size_mb:.2f} MB ({file_size:,} bytes)")
             print(f"\nYou can now run the application from: {executable_path}")
         else:
-            print(f"⚠ Warning: Expected executable not found at {executable_path}")
+            print(f"[!] Warning: Expected executable not found at {executable_path}")
             print("Please check the 'dist' directory for the output file.")
         
     except subprocess.CalledProcessError as e:
