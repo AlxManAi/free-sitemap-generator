@@ -1,4 +1,4 @@
-"""Unit tests for the Free Sitemap Generator crawler functionality.
+"""Unit tests for the ALX Sitemap Generator crawler functionality.
 
 Tests the Crawler class in isolation with mocked PyQt6 and HTTP requests.
 """

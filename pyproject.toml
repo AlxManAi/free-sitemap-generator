@@ -7,14 +7,14 @@ name = "free-sitemap-generator"
 version = "2.0.0"
 description = "A PyQt6 desktop application for crawling websites and generating sitemaps"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 keywords = ["sitemap", "crawler", "seo", "web-scraping", "pyqt6"]
 authors = [
-    {name = "JTGSYSTEMS", email = "contact@jtgsystems.com"}
+    {name = "ALXSYSTEMS", email = "alexqworkmaster@gmail.com"}
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 11 - Beta",
     "Intended Audience :: Developers",
     "Topic :: Internet :: WWW/HTTP :: Site Management",
     "License :: OSI Approved :: MIT License",
@@ -45,9 +45,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/jtgsystems/free-sitemap-generator"
-Repository = "https://github.com/jtgsystems/free-sitemap-generator"
-Issues = "https://github.com/jtgsystems/free-sitemap-generator/issues"
+Homepage = "https://github.com/AlxManAi/free-sitemap-generator"
+Repository = "https://github.com/AlxManAi/free-sitemap-generator"
+Issues = "https://github.com/AlxManAi/free-sitemap-generator"
 
 [tool.black]
 line-length = 100

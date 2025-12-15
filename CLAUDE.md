@@ -1,8 +1,8 @@
-# CLAUDE.md - Free Sitemap Generator
+# CLAUDE.md - ALX Sitemap Generator
 
 ## Project Overview
 
-**Free Sitemap Generator** is a Python-based desktop application with a PyQt6 GUI that crawls websites and generates comprehensive sitemaps. The tool recursively discovers all pages within a specified domain, providing a clear overview of website structure for SEO, analytics, and documentation purposes.
+**ALX Sitemap Generator** is a Python-based desktop application with a PyQt6 GUI that crawls websites and generates comprehensive sitemaps. The tool recursively discovers all pages within a specified domain, providing a clear overview of website structure for SEO, analytics, and documentation purposes.
 
 **Repository**: https://github.com/jtgsystems/free-sitemap-generator
 **License**: MIT
